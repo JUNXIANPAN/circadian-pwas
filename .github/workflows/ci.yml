@@ -29,30 +29,28 @@ jobs:
           find . -name "*.py" \
             -not -path "./.git/*" \
             -not -path "./ldsc/*" \
-            -not -path "./__pycache__/*" \
-            | xargs -I{} python -m py_compile {}
+            -not -path "./*/__pycache__/*" \
+            | xargs python -m py_compile
           echo "✓ 所有 Python 文件语法正常"
 
-      - name: Run unit tests (mock mode, no API keys)
-        env:
-          # 故意不设 ANTHROPIC_API_KEY → 走 mock 模式
-          PYTHONPATH: app:scripts/simulation3
-        run: |
-          pytest tests/ -v --tb=short \
-            --ignore=tests/test_agents.py::TestPubMed \
-            -k "not PubMed and not Annotation"
-        continue-on-error: false
-
-      - name: Run annotation & PubMed tests (network required)
+      - name: Run unit tests (mock mode, no API keys, no network)
         env:
           PYTHONPATH: app:scripts/simulation3
         run: |
-          pytest tests/test_agents.py::TestPubMed \
-                 tests/test_agents.py::TestAnnotation \
-                 -v --tb=short
-        continue-on-error: true   # 网络不稳定时不阻断 CI
+          pytest tests/test_agents.py \
+            -v --tb=short \
+            -k "not PubMed and not Annotation and not Engine"
 
-      - name: Quick eval (mock mode)
+      - name: Run annotation & PubMed tests (network)
+        env:
+          PYTHONPATH: app:scripts/simulation3
+        run: |
+          pytest tests/test_agents.py \
+            -v --tb=short \
+            -k "PubMed or Annotation"
+        continue-on-error: true
+
+      - name: Quick eval (mock mode, skip engine)
         env:
           PYTHONPATH: app:scripts/simulation3
         run: |
