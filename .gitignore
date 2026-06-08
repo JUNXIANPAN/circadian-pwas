@@ -43,3 +43,4 @@ Thumbs.db
 
 # Slurm 中间文件
 slurm-*.out
+eval/results.json
