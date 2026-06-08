@@ -1,0 +1,45 @@
+# 大数据文件（不上传）
+raw_data/
+work/
+reference/chain/
+/data/
+KG/
+
+# 模拟结果（可重新生成）
+results_*/
+logs/
+magma_dir/
+
+# LDSC 工具（独立项目）
+ldsc/
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+
+# Numpy/Scipy 二进制
+*.npy
+*.npz
+
+# Jupyter
+.ipynb_checkpoints/
+
+# 环境
+.env
+*.env
+pwas_env/
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Slurm 中间文件
+slurm-*.out

@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install streamlit plotly anthropic numpy pandas scipy \
+                      scikit-learn requests pytest
+
+      - name: Syntax check (all Python files)
+        run: |
+          find . -name "*.py" \
+            -not -path "./.git/*" \
+            -not -path "./ldsc/*" \
+            -not -path "./__pycache__/*" \
+            | xargs -I{} python -m py_compile {}
+          echo "✓ 所有 Python 文件语法正常"
+
+      - name: Run unit tests (mock mode, no API keys)
+        env:
+          # 故意不设 ANTHROPIC_API_KEY → 走 mock 模式
+          PYTHONPATH: app:scripts/simulation3
+        run: |
+          pytest tests/ -v --tb=short \
+            --ignore=tests/test_agents.py::TestPubMed \
+            -k "not PubMed and not Annotation"
+        continue-on-error: false
+
+      - name: Run annotation & PubMed tests (network required)
+        env:
+          PYTHONPATH: app:scripts/simulation3
+        run: |
+          pytest tests/test_agents.py::TestPubMed \
+                 tests/test_agents.py::TestAnnotation \
+                 -v --tb=short
+        continue-on-error: true   # 网络不稳定时不阻断 CI
+
+      - name: Quick eval (mock mode)
+        env:
+          PYTHONPATH: app:scripts/simulation3
+        run: |
+          python eval/run_eval.py --skip-engine

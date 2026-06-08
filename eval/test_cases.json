@@ -1,0 +1,17 @@
+[
+  {"query": "sleep duration circadian rhythm",        "expected": true,  "category": "positive"},
+  {"query": "chronotype morning evening preference",  "expected": true,  "category": "positive"},
+  {"query": "cortisol levels",                        "expected": true,  "category": "positive"},
+  {"query": "melatonin secretion",                    "expected": true,  "category": "positive"},
+  {"query": "blood pressure diurnal variation",       "expected": true,  "category": "positive"},
+  {"query": "fasting glucose circadian",              "expected": true,  "category": "positive"},
+  {"query": "triglyceride levels time of day",        "expected": true,  "category": "positive"},
+  {"query": "eye color",                              "expected": false, "category": "negative"},
+  {"query": "height",                                 "expected": false, "category": "negative"},
+  {"query": "hair color",                             "expected": false, "category": "negative"},
+  {"query": "bone density",                           "expected": false, "category": "negative"},
+  {"query": "kidney stone",                           "expected": false, "category": "negative"},
+  {"query": "body mass index",                        "expected": null,  "category": "ambiguous"},
+  {"query": "inflammatory markers CRP",               "expected": null,  "category": "ambiguous"},
+  {"query": "glucose tolerance",                      "expected": null,  "category": "ambiguous"}
+]
